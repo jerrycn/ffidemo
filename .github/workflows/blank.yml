@@ -29,17 +29,12 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: '16'
 
       # 安装依赖并下载 ffi-napi
       - name: Install Dependencies
         run: npm install
 
-      # 安装 Windows Build Tools
-      - name: Install Windows Build Tools
-        run: |
-          npm install --global windows-build-tools
-          npm install --global electron-builder
 
       # 构建 Electron 应用
       - name: Build Electron App
