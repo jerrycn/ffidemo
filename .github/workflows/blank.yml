@@ -26,10 +26,10 @@ jobs:
       - name: Install Dependencies
         run: npm install  # 使用 npm install 而不是 npm ci，因为没有 lock 文件
 
-      - name: Install Windows Build Tools
-        run: |
-          npm install --global windows-build-tools
-          npm install --global electron-builder
+      # - name: Install Windows Build Tools
+      #   run: |
+      #     npm install --global windows-build-tools
+      #     npm install --global electron-builder
 
       - name: Build Electron App
         run: npm run build
