@@ -39,11 +39,11 @@
   },
   "homepage": "https://github.com/jerrycn/ffidemo#readme",
   "dependencies": {
-    "electron": "^25.1.1",
     "ffi-napi": "^4.0.3",
     "ref-napi": "^3.0.3"
   },
   "devDependencies": {
+    "electron": "^25.1.1",
     "electron-builder": "^24.9.1"
   }
 }
