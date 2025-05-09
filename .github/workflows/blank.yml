@@ -2,47 +2,64 @@
 
 name: Build Electron App
 
-# Controls when the workflow will run
+
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "main" ]
+    branches:
+      - main  # 监听 main 分支的 push 事件
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main  # 监听 main 分支的 PR 事件
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
-    runs-on: windows-latest
+    runs-on: windows-latest  # 使用 Windows 环境来打包 EXE
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v4  # 获取代码
 
-      # 设置 Node.js 环境
-      - name: Setup Node.js
+
+      - name: Setup Node.js 
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: 16  # 选择 Node.js 版本
+          cache: 'npm'  # 缓存 npm 依赖
 
-      # 安装依赖并下载 ffi-napi
       - name: Install Dependencies
-        run: npm install
+        run: npm ci  # 确保使用 package-lock.json 安装
+
+        # 安装依赖并下载 ffi-napi
+      - name: 安装 ffi-napi
+        run: |
+          npm install ffi-napi
+          echo "ffi-napi 安装完成"
+
+      - name: 安装 ref-napi
+        run: |
+          npm install ref-napi
+          echo "ref-napi 安装完成"
+
+      - name: Rebuild native modules
+        run: npx electron-rebuild
+
+      - name: Build Phaser Game
+        run: npm run pack  # 运行构建脚本，确保 package.json 里有 "pack" 脚本
+
+      # 检查 dist 目录内容，确认是否生成 EXE
+      - name: Verify Build Output
+        run: |
+          echo "Checking dist directory..."
+          dir dist  # 在 Windows 环境下列出 dist 目录内容
+          if (-Not (Test-Path "dist\*.exe")) {
+            Write-Host "Error: No EXE file found in dist!"
+            exit 1
+          }
 
 
-      # 构建 Electron 应用
-      - name: Build Electron App
-        run: npm run build
-
-      # 上传构建产物
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v3
+      - name: Upload EXE as Artifact
+        uses: actions/upload-artifact@v4  # 确保使用最新 v4 版本
         with:
-          name: electron-app
-          path: dist/*.exe
+          name: Phaser-Game-EXE
+          path: dist/*.exe  # 确保 EXE 输出路径正确
+          retention-days: 7  # 7 天后自动删除
