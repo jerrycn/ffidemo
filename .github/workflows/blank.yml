@@ -2,7 +2,6 @@
 
 name: Build Electron App
 
-
 on:
   push:
     branches:
@@ -19,32 +18,21 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4  # 获取代码
 
-
       - name: Setup Node.js 
         uses: actions/setup-node@v3
         with:
           node-version: 16  # 选择 Node.js 版本
-          cache: 'npm'  # 缓存 npm 依赖
 
       - name: Install Dependencies
-        run: npm ci  # 确保使用 package-lock.json 安装
+        run: npm install  # 使用 npm install 而不是 npm ci，因为没有 lock 文件
 
-        # 安装依赖并下载 ffi-napi
-      - name: 安装 ffi-napi
+      - name: Install Windows Build Tools
         run: |
-          npm install ffi-napi
-          echo "ffi-napi 安装完成"
+          npm install --global windows-build-tools
+          npm install --global electron-builder
 
-      - name: 安装 ref-napi
-        run: |
-          npm install ref-napi
-          echo "ref-napi 安装完成"
-
-      - name: Rebuild native modules
-        run: npx electron-rebuild
-
-      - name: Build Phaser Game
-        run: npm run pack  # 运行构建脚本，确保 package.json 里有 "pack" 脚本
+      - name: Build Electron App
+        run: npm run build
 
       # 检查 dist 目录内容，确认是否生成 EXE
       - name: Verify Build Output
@@ -56,10 +44,9 @@ jobs:
             exit 1
           }
 
-
-      - name: Upload EXE as Artifact
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4  # 确保使用最新 v4 版本
         with:
-          name: Phaser-Game-EXE
+          name: electron-app
           path: dist/*.exe  # 确保 EXE 输出路径正确
           retention-days: 7  # 7 天后自动删除
