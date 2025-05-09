@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Build Electron App
 
 # Controls when the workflow will run
 on:
@@ -23,21 +23,31 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
       # 设置 Node.js 环境
-      - name: 设置 Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '18'
 
       # 安装依赖并下载 ffi-napi
-      - name: 安装 ffi-napi
+      - name: Install Dependencies
+        run: npm install
+
+      # 安装 Windows Build Tools
+      - name: Install Windows Build Tools
         run: |
-          npm install ffi-napi
-          echo "ffi-napi 安装完成"
-          
-      # 显示安装结果
-      - name: 检查安装结果
-        run: |
-          npm list ffi-napi
+          npm install --global windows-build-tools
+          npm install --global electron-builder
+
+      # 构建 Electron 应用
+      - name: Build Electron App
+        run: npm run build
+
+      # 上传构建产物
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: electron-app
+          path: dist/*.exe

@@ -1,10 +1,32 @@
 {
-  "name": "ffidemo",
+  "name": "electron-ffi-demo",
   "version": "1.0.0",
-  "description": "test",
-  "main": "index.js",
+  "description": "Electron FFI 测试项目",
+  "main": "main.js",
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "electron-builder build --win --publish never"
+  },
+  "build": {
+    "appId": "com.electron.ffidemo",
+    "productName": "Electron FFI Demo",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    }
   },
   "repository": {
     "type": "git",
@@ -15,5 +37,10 @@
   "bugs": {
     "url": "https://github.com/jerrycn/ffidemo/issues"
   },
-  "homepage": "https://github.com/jerrycn/ffidemo#readme"
+  "homepage": "https://github.com/jerrycn/ffidemo#readme",
+  "dependencies": {
+    "electron": "^25.1.1",
+    "ffi-napi": "^4.0.3",
+    "ref-napi": "^3.0.3"
+  }
 }
