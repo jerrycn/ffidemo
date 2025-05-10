@@ -1,11 +1,12 @@
+const path = require('path');
 const ffi = require('ffi-napi');
 const ref = require('ref-napi');
 
 // 创建一个简单的测试函数
 function testFFI() {
     try {
-        // 这里我们使用一个简单的系统函数作为示例
-        const libc = ffi.Library(null, {
+        // 使用完整的路径加载系统库
+        const libc = ffi.Library(path.join(process.resourcesPath, 'node_modules/ffi-napi/build/Release/ffi_bindings.node'), {
             'printf': ['int', ['string']]
         });
 
@@ -14,6 +15,7 @@ function testFFI() {
         document.getElementById('result').innerHTML = `FFI 调用成功！返回值: ${result}`;
     } catch (error) {
         document.getElementById('result').innerHTML = `FFI 调用失败：${error.message}`;
+        console.error('FFI Error:', error);
     }
 }
 
