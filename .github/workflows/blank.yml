@@ -21,7 +21,7 @@ jobs:
       - name: Setup Node.js 
         uses: actions/setup-node@v3
         with:
-          node-version: 16  # 选择 Node.js 版本
+          node-version: 15  # 选择 Node.js 版本
           
       - name: Install Electron Rebuild
         run: npm install --save-dev electron-rebuild
