@@ -22,11 +22,37 @@
         "portable"
       ]
     },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true
-    }
+    "files": [
+      "**/*",
+      "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
+      "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
+      "!**/node_modules/*.d.ts",
+      "!**/node_modules/.bin",
+      "!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj}",
+      "!.editorconfig",
+      "!**/._*",
+      "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,.gitignore,.gitattributes}",
+      "!**/{__pycache__,thumbs.db,.flowconfig,.idea,.vs,.nyc_output}",
+      "!**/{appveyor.yml,.travis.yml,circle.yml}",
+      "!**/{npm-debug.log,yarn.lock,.yarn-integrity,.yarn-metadata.json}"
+    ],
+    "extraResources": [
+      {
+        "from": "node_modules/ffi-napi/build/Release/",
+        "to": "node_modules/ffi-napi/build/Release/",
+        "filter": ["*.node"]
+      },
+      {
+        "from": "node_modules/ref-napi/build/Release/",
+        "to": "node_modules/ref-napi/build/Release/",
+        "filter": ["*.node"]
+      }
+    ],
+    "asar": true,
+    "asarUnpack": [
+      "node_modules/ffi-napi/build/Release/*.node",
+      "node_modules/ref-napi/build/Release/*.node"
+    ]
   },
   "repository": {
     "type": "git",
