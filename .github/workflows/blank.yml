@@ -12,61 +12,37 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest  # 使用 Windows 环境来打包 EXE
+    runs-on: windows-latest
+    env:
+      npm_config_python: C:\Python310\python.exe
+      npm_config_msvs_version: 2022
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4  # 获取代码
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Setup Node.js 
+      - name: Setup Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install VS 2022 Build Tools
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+          toolset: 14.3
+          sdkver: 10.0.22000.0
+
+      - name: Setup Node.js 18
         uses: actions/setup-node@v3
         with:
-          node-version: 16  # 选择 Node.js 版本
-          
-      - name: Install Electron Rebuild
-        run: |
-          echo "开始安装 electron-rebuild..."
-          npm install --save-dev electron-rebuild
-          echo "electron-rebuild 安装完成"
-          
-      - name: Install Dependencies
-        run: |
-          echo "开始安装项目依赖..."
-          npm install  # 使用 npm install 而不是 npm ci，因为没有 lock 文件
-          echo "项目依赖安装完成"
-          echo "当前 Node.js 版本:"
-          node -v
-          echo "当前 npm 版本:"
-          npm -v
+          node-version: 18.x
+          cache: 'npm'
 
-      - name: Rebuild Native Modules
+      - name: Install dependencies
         run: |
-          echo "开始重建原生模块..."
-          npx electron-rebuild --verbose
-          echo "原生模块重建完成"
+          npm install --global node-gyp
+          npm install ffi-napi@latest ref-napi@latest --save --force
 
-      - name: Build Electron App
-        run: |
-          echo "开始构建 Electron 应用..."
-          npm run build
-          echo "应用构建完成"
-
-      # 检查 dist 目录内容，确认是否生成 EXE
-      - name: Verify Build Output
-        run: |
-          echo "检查构建输出..."
-          echo "dist 目录内容:"
-          dir dist  # 在 Windows 环境下列出 dist 目录内容
-          echo "检查 EXE 文件..."
-          if (-Not (Test-Path "dist\*.exe")) {
-            Write-Host "错误: 在 dist 目录中未找到 EXE 文件!"
-            exit 1
-          }
-          echo "构建验证完成"
-
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4  # 确保使用最新 v4 版本
-        with:
-          name: electron-app
-          path: dist/*.exe  # 确保 EXE 输出路径正确
-          retention-days: 7  # 7 天后自动删除
+      - name: Rebuild modules
+        run: npx electron-rebuild --force
