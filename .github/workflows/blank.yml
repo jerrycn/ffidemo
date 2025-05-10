@@ -25,12 +25,6 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Setup MSBuild (Visual Studio 2022)
-        uses: microsoft/setup-msbuild@v1
-        with:
-          vs-version: '2022'
-          msbuild-architecture: 'x64'
-
       - name: Setup Node.js 18
         uses: actions/setup-node@v3
         with:
