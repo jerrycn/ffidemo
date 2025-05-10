@@ -34,15 +34,18 @@ jobs:
           python-version: '3.10'  # 指定 Python 版本
 
       # 安装 Visual Studio 2022 构建工具
-      - name: Setup Visual Studio
-        uses: actions/setup-vs@v1
+      - name: Install Visual Studio
+        uses: microsoft/setup-msbuild@v1
         with:
           vs-version: '2022'
-          components: |
-            Microsoft.VisualStudio.Component.VC.Tools.x86.x64
-            Microsoft.VisualStudio.Component.Windows10SDK
-            Microsoft.VisualStudio.Component.VC.Tools.ARM64
-            Microsoft.VisualStudio.Component.VC.Tools.ARM
+          msbuild-architecture: 'x64'
+
+      - name: Install Windows SDK
+        uses: microsoft/setup-msbuild@v1
+        with:
+          vs-version: '2022'
+          msbuild-architecture: 'x64'
+          windows-sdk: true
 
       # 设置 Node.js 18 环境
       - name: Setup Node.js 18
