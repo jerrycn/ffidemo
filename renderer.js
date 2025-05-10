@@ -1,12 +1,11 @@
-const path = require('path');
 const ffi = require('ffi-napi');
 const ref = require('ref-napi');
 
 // 创建一个简单的测试函数
 function testFFI() {
     try {
-        // 使用完整的路径加载系统库
-        const libc = ffi.Library(path.join(process.resourcesPath, 'node_modules/ffi-napi/build/Release/ffi_bindings.node'), {
+        // 直接使用系统库
+        const libc = ffi.Library('msvcrt', {
             'printf': ['int', ['string']]
         });
 

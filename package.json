@@ -28,12 +28,12 @@
     "asar": false,
     "extraResources": [
       {
-        "from": "node_modules/ffi-napi/build/Release/",
-        "to": "node_modules/ffi-napi/build/Release/"
-      },
-      {
-        "from": "node_modules/ref-napi/build/Release/",
-        "to": "node_modules/ref-napi/build/Release/"
+        "from": "node_modules",
+        "to": "node_modules",
+        "filter": [
+          "ffi-napi/**/*",
+          "ref-napi/**/*"
+        ]
       }
     ]
   },
