@@ -21,29 +21,48 @@ jobs:
       - name: Setup Node.js 
         uses: actions/setup-node@v3
         with:
-          node-version: 15  # 选择 Node.js 版本
+          node-version: 16  # 选择 Node.js 版本
           
       - name: Install Electron Rebuild
-        run: npm install --save-dev electron-rebuild
-
+        run: |
+          echo "开始安装 electron-rebuild..."
+          npm install --save-dev electron-rebuild
+          echo "electron-rebuild 安装完成"
+          
       - name: Install Dependencies
-        run: npm install  # 使用 npm install 而不是 npm ci，因为没有 lock 文件
+        run: |
+          echo "开始安装项目依赖..."
+          npm install  # 使用 npm install 而不是 npm ci，因为没有 lock 文件
+          echo "项目依赖安装完成"
+          echo "当前 Node.js 版本:"
+          node -v
+          echo "当前 npm 版本:"
+          npm -v
 
       - name: Rebuild Native Modules
-        run: npx electron-rebuild
+        run: |
+          echo "开始重建原生模块..."
+          npx electron-rebuild --verbose
+          echo "原生模块重建完成"
 
       - name: Build Electron App
-        run: npm run build
+        run: |
+          echo "开始构建 Electron 应用..."
+          npm run build
+          echo "应用构建完成"
 
       # 检查 dist 目录内容，确认是否生成 EXE
       - name: Verify Build Output
         run: |
-          echo "Checking dist directory..."
+          echo "检查构建输出..."
+          echo "dist 目录内容:"
           dir dist  # 在 Windows 环境下列出 dist 目录内容
+          echo "检查 EXE 文件..."
           if (-Not (Test-Path "dist\*.exe")) {
-            Write-Host "Error: No EXE file found in dist!"
+            Write-Host "错误: 在 dist 目录中未找到 EXE 文件!"
             exit 1
           }
+          echo "构建验证完成"
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4  # 确保使用最新 v4 版本
