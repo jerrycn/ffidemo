@@ -35,6 +35,9 @@ jobs:
           echo "安装 node-gyp..."
           npm install -g node-gyp
 
+          echo "安装 node-addon-api（用于编译原生模块）..."
+          npm install node-addon-api --save
+
           echo "克隆并编译 ffi-napi..."
           git clone https://github.com/node-ffi-napi/node-ffi-napi.git
           cd node-ffi-napi
