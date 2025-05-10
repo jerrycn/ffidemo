@@ -1,37 +1,40 @@
-# Electron FFI 测试项目
+# FFI Demo
 
-这是一个使用 Electron 和 ffi-napi 的简单测试项目。
+这是一个使用 ffi-napi 的简单演示项目，展示了如何在 Electron 应用中调用 Windows API。
 
-## 环境要求
+## 功能特点
 
-- Node.js 16 或更高版本
-- npm 或 yarn
+- 使用 ffi-napi 调用 Windows API
+- 演示了 MessageBoxW 函数的调用
+- 包含完整的 Electron 应用结构
+- 自动构建 Windows 可执行文件
 
-## 安装步骤
+## 开发环境要求
 
-1. 克隆项目后，安装依赖：
+- Node.js 18.x
+- Python 3.10
+- Visual Studio 2022 Build Tools
+- Windows SDK
+
+## 本地开发
+
+1. 安装依赖：
 ```bash
 npm install
 ```
 
-2. 运行项目：
+2. 运行应用：
 ```bash
 npm start
 ```
 
-## 项目结构
+3. 构建应用：
+```bash
+npm run build
+```
 
-- `main.js` - Electron 主进程文件
-- `index.html` - 主页面
-- `renderer.js` - 渲染进程文件，包含 FFI 测试代码
-- `package.json` - 项目配置文件
+## 自动构建
 
-## 功能说明
+项目使用 GitHub Actions 自动构建 Windows 可执行文件。每次推送到 main 分支时都会触发构建。
 
-这个项目演示了如何在 Electron 应用中使用 ffi-napi 调用系统函数。当前示例中使用了 `printf` 函数作为演示。
-
-## 注意事项
-
-- 确保系统已安装必要的编译工具
-- 在 Windows 系统上可能需要安装 Visual Studio Build Tools
-- 在 macOS 上需要安装 Xcode Command Line Tools
+构建产物可以在 GitHub Actions 的 Artifacts 中下载。 

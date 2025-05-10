@@ -1,59 +1,29 @@
 {
-  "name": "electron-ffi-demo",
+  "name": "ffi-napi-demo",
   "version": "1.0.0",
-  "description": "Electron FFI 测试项目",
-  "main": "main.js",
-  "engines": {
-    "node": ">=16.0.0"
-  },
+  "description": "A simple FFI demo using ffi-napi",
+  "main": "src/main.js",
   "scripts": {
     "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "electron-builder build --win --publish never",
-    "postinstall": "electron-rebuild"
-  },
-  "build": {
-    "appId": "com.electron.ffidemo",
-    "productName": "Electron FFI Demo",
-    "directories": {
-      "output": "dist"
-    },
-    "win": {
-      "target": [
-        "portable"
-      ]
-    },
-    "files": [
-      "**/*"
-    ],
-    "asar": false,
-    "extraResources": [
-      {
-        "from": "node_modules",
-        "to": "node_modules",
-        "filter": [
-          "ffi-napi/**/*",
-          "ref-napi/**/*"
-        ]
-      }
-    ]
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jerrycn/ffidemo.git"
+    "build": "electron-builder",
+    "postinstall": "electron-builder install-app-deps"
   },
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/jerrycn/ffidemo/issues"
-  },
-  "homepage": "https://github.com/jerrycn/ffidemo#readme",
   "dependencies": {
     "ffi-napi": "^4.0.3",
     "ref-napi": "^3.0.3"
   },
   "devDependencies": {
-    "electron": "^25.1.1",
-    "electron-builder": "^24.9.1"
+    "electron": "^28.1.0",
+    "electron-builder": "^24.9.1",
+    "electron-rebuild": "^3.2.9"
+  },
+  "build": {
+    "appId": "com.ffi.demo",
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.ico"
+    }
   }
-}
+} 
