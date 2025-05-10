@@ -1,9 +1,5 @@
-# Electron 应用构建工作流
-# 此工作流用于在 Windows 环境下构建 Electron 应用，包含原生模块的编译
-
 name: Build Electron App
 
-# 触发条件：当推送到 main 分支或创建针对 main 分支的 PR 时触发
 on:
   push:
     branches:
@@ -14,99 +10,69 @@ on:
 
 jobs:
   build:
-    # 使用 Windows 最新版作为构建环境
     runs-on: windows-latest
-    
-    # 设置环境变量，指定 Python 和 Visual Studio 版本
+
     env:
-      npm_config_python: C:\Python310\python.exe  # 指定 Python 路径
-      npm_config_msvs_version: 2022  # 指定 VS 版本
+      npm_config_python: C:\Python310\python.exe
+      npm_config_msvs_version: 2022
 
     steps:
-      # 检出代码
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 设置 Python 3.10 环境
       - name: Setup Python 3.10
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'  # 指定 Python 版本
+          python-version: '3.10'
 
-      # 安装 Visual Studio 2022 构建工具
-      - name: Install Visual Studio
+      - name: Setup MSBuild (Visual Studio 2022)
         uses: microsoft/setup-msbuild@v1
         with:
           vs-version: '2022'
           msbuild-architecture: 'x64'
 
-      - name: Install Windows SDK
-        uses: microsoft/setup-msbuild@v1
-        with:
-          vs-version: '2022'
-          msbuild-architecture: 'x64'
-          windows-sdk: true
-
-      # 设置 Node.js 18 环境
       - name: Setup Node.js 18
         uses: actions/setup-node@v3
         with:
-          node-version: 18.x  # 指定 Node.js 版本
-          cache: 'npm'  # 启用 npm 缓存
+          node-version: 18.x
+          cache: 'npm'
 
-      # 安装依赖和编译原生模块
-      - name: Install dependencies
+      - name: Install dependencies and build native module
         run: |
-          echo "安装全局 node-gyp..."
-          npm install --global node-gyp
-          
+          echo "安装 node-gyp..."
+          npm install -g node-gyp
+
           echo "克隆并编译 ffi-napi..."
-          git clone git://github.com/node-ffi-napi/node-ffi-napi.git
+          git clone https://github.com/node-ffi-napi/node-ffi-napi.git
           cd node-ffi-napi
-          echo "开始编译 ffi-napi..."
           node-gyp rebuild
           cd ..
-          
+
           echo "安装项目依赖..."
           npm install ffi-napi@latest ref-napi@latest --save --force
-          
-          echo "显示编译信息..."
-          node-gyp list
-          echo "显示已安装的模块..."
-          npm list --depth=0
 
-      # 重建所有原生模块
-      - name: Rebuild modules
+      - name: Rebuild native modules for Electron
         run: |
-          echo "开始重建所有原生模块..."
+          echo "使用 electron-rebuild 重建模块..."
           npx electron-rebuild --force
-          echo "重建完成，显示模块状态..."
-          npm list --depth=0
 
-      # 构建 Electron 应用
       - name: Build Electron App
         run: |
-          echo "开始构建 Electron 应用..."
+          echo "开始构建应用..."
           npm run build
-          echo "应用构建完成"
 
-      # 验证构建输出
       - name: Verify Build Output
         run: |
-          echo "检查构建输出..."
-          echo "dist 目录内容:"
+          echo "检查 dist 目录..."
           dir dist
-          echo "检查 EXE 文件..."
           if (-Not (Test-Path "dist\*.exe")) {
-            Write-Host "错误: 在 dist 目录中未找到 EXE 文件!"
+            Write-Host "错误: dist 中未找到 EXE 文件"
             exit 1
           }
-          echo "构建验证完成"
 
-      # 上传构建产物
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: electron-app  # 产物名称
-          path: dist/*.exe  # 产物路径
-          retention-days: 7  # 保留天数
+          name: electron-app
+          path: dist/*.exe
+          retention-days: 7
