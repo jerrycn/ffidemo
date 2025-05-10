@@ -35,10 +35,14 @@ jobs:
 
       # 安装 Visual Studio 2022 构建工具
       - name: Setup Visual Studio
-        uses: microsoft/setup-msbuild@v1
+        uses: actions/setup-vs@v1
         with:
           vs-version: '2022'
-          msbuild-architecture: 'x64'
+          components: |
+            Microsoft.VisualStudio.Component.VC.Tools.x86.x64
+            Microsoft.VisualStudio.Component.Windows10SDK
+            Microsoft.VisualStudio.Component.VC.Tools.ARM64
+            Microsoft.VisualStudio.Component.VC.Tools.ARM
 
       # 设置 Node.js 18 环境
       - name: Setup Node.js 18
