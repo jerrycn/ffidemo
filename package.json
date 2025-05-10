@@ -9,7 +9,8 @@
   "scripts": {
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "electron-builder build --win --publish never"
+    "build": "electron-builder build --win --publish never",
+    "postinstall": "electron-rebuild"
   },
   "build": {
     "appId": "com.electron.ffidemo",

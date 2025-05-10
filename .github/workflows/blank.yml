@@ -22,10 +22,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16  # 选择 Node.js 版本
+          
+      - name: Install Electron Rebuild
+        run: npm install --save-dev electron-rebuild
 
       - name: Install Dependencies
         run: npm install  # 使用 npm install 而不是 npm ci，因为没有 lock 文件
-
 
       - name: Build Electron App
         run: npm run build
