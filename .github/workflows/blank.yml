@@ -33,7 +33,6 @@ jobs:
       - name: Install dependencies and build native module
         run: |
           echo "清理 node_modules 和 npm 缓存..."
-          rd /s /q node_modules
           npm cache clean --force
 
           echo "安装 node-gyp..."
