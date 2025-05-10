@@ -34,12 +34,11 @@ jobs:
           python-version: '3.10'  # 指定 Python 版本
 
       # 安装 Visual Studio 2022 构建工具
-      - name: Install VS 2022 Build Tools
-        uses: ilammy/msvc-dev-cmd@v1
+      - name: Setup Visual Studio
+        uses: microsoft/setup-msbuild@v1
         with:
-          arch: x64  # 指定架构
-          toolset: 14.3  # 指定工具集版本
-          sdkver: 10.0.22000.0  # 指定 SDK 版本
+          vs-version: '2022'
+          msbuild-architecture: 'x64'
 
       # 设置 Node.js 18 环境
       - name: Setup Node.js 18
